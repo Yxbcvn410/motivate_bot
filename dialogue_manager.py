@@ -13,7 +13,7 @@ class DialogueManager:
         self.mob.get_user_by_id(self.id).promises[date.today().toordinal()]['status'] = status
 
     def get_status(self):
-        return self.mob.get_user_by_id(self.id).promises[date.today().toordinal()]['status']
+        return self.mob.get_user_by_id(self.id).today_status()
 
     def promise_exists(self):
         return date.today().toordinal() in self.mob.get_user_by_id(self.id).promises.keys()
@@ -29,7 +29,8 @@ class DialogueManager:
                 return words.promise_accept, words.menu,
             else:
                 self.p2p_state = 'IDLE'
-                return words.promise_decline.format(self.mob.get_user_by_id(self.id).promises[date.today().toordinal()]), words.menu
+                return words.promise_decline.format(
+                    self.mob.get_user_by_id(self.id).promises[date.today().toordinal()]), words.menu
         if self.p2p_state == 'AWAIT_STATUS':
             if self.get_status() in {-1, 2, 3}:
                 self.p2p_state = 'IDLE'

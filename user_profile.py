@@ -1,4 +1,5 @@
 from ast import literal_eval
+from datetime import date
 
 
 class UserProfile:
@@ -41,6 +42,9 @@ class UserProfile:
                 self.promises.pop(list(self.promises.keys())[i])
             else:
                 i += 1
+
+    def today_status(self):
+        return self.promises[date.today().toordinal()]['status']
 
     def update_nickname(self, message):
         if message['username'] == '':
