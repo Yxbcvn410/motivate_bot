@@ -62,7 +62,8 @@ class MobManager:
                 self.users[member_index].promises['status'] == -1])
         if self.users[member_index].promises[dt.date.today().toordinal()]['status'] in {-1, 0}:
             bot.send_message(self.users[member_index - 1].id, message_text)
-            bot.send_message(self.users[member_index - 3].id, message_text)
+            if len(self.users) > 3:
+                bot.send_message(self.users[member_index - 3].id, message_text)
             if self.users[member_index].today_status() == -1:
                 bot.send_message(self.users[member_index].id, words.promise_undef)
             self.users[member_index].deliver_promise(
@@ -92,10 +93,11 @@ class MobManager:
                              "Итоги сегодняшнего дня: Пользователь {} {}".format(self.users[member_index].nickname,
                                                                                  self.wrap_status(
                                                                                      self.users[member_index])))
-            bot.send_message(self.users[member_index - 3].id,
-                             "Итоги сегодняшнего дня: Пользователь {} {}".format(self.users[member_index].nickname,
-                                                                                 self.wrap_status(
-                                                                                     self.users[member_index])))
+            if len(self.users) > 3:
+                bot.send_message(self.users[member_index - 3].id,
+                                 "Итоги сегодняшнего дня: Пользователь {} {}".format(self.users[member_index].nickname,
+                                                                                     self.wrap_status(
+                                                                                         self.users[member_index])))
 
     def remind_promise(self):
         for member in self.users:

@@ -1,11 +1,15 @@
-import tgbot_api as bot
-from mob_manager import MobManager
-from dialogue_manager import DialogueManager
 import datetime
+
+import tgbot_api as bot
+from dialogue_manager import DialogueManager
+from mob_manager import MobManager
 
 upd_offset = 0
 mob = MobManager()
 dialogues = {}
+morning = [8, 10, 12]
+evening = [18, 21, 0]
+night = 2
 morning_reminders = [True] * 3
 evening_reminders = [True] * 3
 night_reminder = True
@@ -54,36 +58,23 @@ while True:
     # Check timers
     if full_time(datetime.datetime.now()):
         hr = datetime.datetime.now().hour
-        if hr == 7 and morning_reminders[0]:
-            mob.remind_promise()
-            mob.announce_promise(False)
-            set_global_p2p_state({-1}, 'AWAIT_PROMISE')
-            morning_reminders[0] = False
-            night_reminder = True
-        if hr == 9 and morning_reminders[1]:
-            mob.remind_promise()
-            mob.announce_promise(False)
-            set_global_p2p_state({-1}, 'AWAIT_PROMISE')
-            morning_reminders[1] = False
-        if hr == 11 and morning_reminders[1]:
+        for i in range(len(evening) - 1):
+            if hr == morning[i] and morning_reminders[i]:
+                mob.remind_promise()
+                mob.announce_promise(False)
+                set_global_p2p_state({-1}, 'AWAIT_PROMISE')
+                morning_reminders[i] = False
+        if hr == morning[-1] and morning_reminders[-1]:
             mob.announce_promise(True)
-            morning_reminders[2] = False
-        if hr == 18 and morning_reminders[0]:
-            mob.remind_status()
-            set_global_p2p_state({1}, 'AWAIT_STATUS')
-            evening_reminders[0] = False
-        if hr == 20 and morning_reminders[1]:
-            mob.remind_promise()
-            set_global_p2p_state({1}, 'AWAIT_STATUS')
-            evening_reminders[1] = False
-        if hr == 22 and morning_reminders[1]:
-            mob.remind_promise()
-            set_global_p2p_state({1}, 'AWAIT_STATUS')
-            evening_reminders[2] = False
-        if hr == 23 and night_reminder:
-            morning_reminders = [True] * 3
-            evening_reminders = [True] * 3
+            morning_reminders[-1] = False
+        for i in range(len(evening)):
+            if hr == evening[i] and evening_reminders[i]:
+                mob.remind_status()
+                set_global_p2p_state({1}, 'AWAIT_STATUS')
+                evening_reminders[i] = False
+        if hr == night and night_reminder:
+            morning_reminders = [True] * len(morning_reminders)
+            evening_reminders = [True] * len(morning_reminders)
             night_reminder = False
             mob.reset_status()
             mob.announce_status()
-
