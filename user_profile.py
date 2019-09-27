@@ -44,7 +44,10 @@ class UserProfile:
                 i += 1
 
     def today_status(self):
-        return self.promises[date.today().toordinal()]['status']
+        try:
+            return self.promises[date.today().toordinal()]['status']
+        except KeyError:
+            return -1
 
     def update_nickname(self, message):
         if message['username'] == '':
@@ -53,4 +56,10 @@ class UserProfile:
             self.nickname = '{} {}: @{}'.format(message['first_name'], message['last_name'], message['username'])
 
     def stats_str(self):
-        pass  # TODO: Add stats
+        stats = '''Статистика пользовалеля {} \n\n'''.format(self.nickname)
+        for day in sorted(self.promises.keys()):
+            stats += '''{}
+            Пообещал(а): {}
+            Статус: {}\n\n'''.format(date.fromordinal(day), self.promises[day]['text'],
+                                     self.promise_status[self.promises[day]['status']])
+        return stats

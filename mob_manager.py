@@ -59,7 +59,7 @@ class MobManager:
                     self.users[member_index].promises[
                         dt.date.today().toordinal()]['text'] + '""\n',
              True: 'ничего не собирается делать, потому что он лентяй\nПопробуй пнуть его, если получится'}[
-                self.users[member_index].promises['status'] == -1])
+                self.users[member_index].today_status() == -1])
         if self.users[member_index].promises[dt.date.today().toordinal()]['status'] in {-1, 0}:
             bot.send_message(self.users[member_index - 1].id, message_text)
             if len(self.users) > 3:
@@ -79,7 +79,7 @@ class MobManager:
                 if force:
                     self.users[member_index].promises.update({
                         dt.date.today().toordinal(): {
-                            'text': '',
+                            'text': 'ничего',
                             'status': -1}})
                     self.notify_of(member_index)
 
