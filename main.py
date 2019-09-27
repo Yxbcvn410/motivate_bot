@@ -53,7 +53,7 @@ while True:
             msgs_to_send = dialogues[u['message']['from']['id']].handle_message(u['message'])
             for msg in msgs_to_send:
                 bot.send_message(u['message']['from']['id'], msg)
-            print(u['message']['from'] + " - '" + u['message']['text'] + "'")
+            print(str(u['message']['from']) + " - '" + str(u['message']['text']) + "'")
         mob.swap('mob_swap')
 
     # Check timers
